@@ -1,11 +1,15 @@
 import * as admin from 'firebase-admin';
 
 // Configuração do Firebase Admin SDK para acesso ao Storage
-import serviceAccount from '../keys/rastreamento-keys.json';
 import { getDataAtualBrasil } from './dataProcessing';
+
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
-  storageBucket: 'rastreamento-barcos.appspot.com'
+  credential: admin.credential.cert({
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.CLIENT_EMAIL,
+    privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n')
+  }),
+  storageBucket: process.env.STORAGE_BUCKET
 });
 
 // Função que converte um array de strings em um arquivo txt e salva no Storage

@@ -1,9 +1,9 @@
 import { Server } from 'socket.io';
 import { handleBoat } from '../handlers/boat-handlers';
-// import { handleRaceHistory } from '../handlers/history-handlers';
+import { handleRaceHistory } from '../handlers/history-handlers';
 
 export function configureSockets(io: Server): void {
-  let boatsHistory: string [] = [];
+  let dataHistory: string [] = [];
   let record: boolean [] = [];
 
   io.on('connection', (socket: any) => {
@@ -14,6 +14,6 @@ export function configureSockets(io: Server): void {
     });
 
     handleBoat(socket, io);
-    // handleRaceHistory(socket, io, boatsHistory, record)
+    handleRaceHistory(socket, io, dataHistory, record)
   });
 }

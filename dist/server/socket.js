@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.configureSockets = void 0;
 const boat_handlers_1 = require("../handlers/boat-handlers");
-// import { handleRaceHistory } from '../handlers/history-handlers';
+const history_handlers_1 = require("../handlers/history-handlers");
 function configureSockets(io) {
-    let boatsHistory = [];
+    let dataHistory = [];
     let record = [];
     io.on('connection', (socket) => {
         console.log('new user: ', socket.id);
@@ -12,7 +12,7 @@ function configureSockets(io) {
             console.log('user disconnected: ', socket.id);
         });
         (0, boat_handlers_1.handleBoat)(socket, io);
-        // handleRaceHistory(socket, io, boatsHistory, record)
+        (0, history_handlers_1.handleRaceHistory)(socket, io, dataHistory, record);
     });
 }
 exports.configureSockets = configureSockets;

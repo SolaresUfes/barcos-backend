@@ -1,4 +1,4 @@
-import { Boat, Data } from "../interfaces/Boat";
+import { Data } from "../interfaces/Data";
 import moment from 'moment-timezone';
 
 export function getDataAtualBrasil(): moment.Moment {
@@ -21,27 +21,5 @@ export function convertData(str: string) : Data {
       tensaoEntradaMPPT: array[8],
       correnteMPPT: array[9],
       updateAt: getDataAtualBrasil().format('DD/MM/YYYY HH:mm:ss')
-    }
-  
-}
-
-export function updateTheBoats(boats: Boat[], newBoats: Boat[]) : Boat[] {
-  // console.log(boats);
-  // console.log(newBoats);
-
-  // update the boats
-  newBoats.forEach((newBoat) => {
-    const index = boats.findIndex((boat) => boat.id === newBoat.id);
-
-    if (index !== -1) {
-      // update the boat
-      boats[index] = newBoat;
-    } else {
-      // add the boat
-      boats.push(newBoat);
-    }
-  });
-
-  // console.log(boats);
-  return boats;
+    }  
 }

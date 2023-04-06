@@ -17,6 +17,29 @@
         socket.on('info', function(data) {
             document.getElementById('result').innerHTML = "Resultado:" + `<pre>${JSON.stringify(data, null, 2)}</pre>`;
         });
+
+        socket.on('recordStatus', function(status) {
+            // get the button to change the text
+            let btn = document.getElementById('btn');
+            if (status) {
+                btn.innerHTML = 'Gravando';
+            } else {
+                btn.innerHTML = 'Gravar';
+            }
+        });
+
+        // wait page load
+        window.onload = function() {
+            // get the button
+            let btn = document.getElementById('btn');
+            // add the click event
+            btn.addEventListener('click', function() {
+                // send the event to the server
+                socket.emit('record');
+            });
+        }
     </script>
+
+    <button id="btn">gravar</button>
 </body>
 </html>
