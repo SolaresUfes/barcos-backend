@@ -5,6 +5,7 @@ import { handleRaceHistory } from '../handlers/history-handlers';
 export function configureSockets(io: Server): void {
   let dataHistory: string [] = [];
   let record: boolean [] = [];
+  let speed: string [] = ['0'];
 
   io.on('connection', (socket: any) => {
     console.log('new user: ', socket.id);
@@ -13,7 +14,7 @@ export function configureSockets(io: Server): void {
       console.log('user disconnected: ', socket.id);
     });
 
-    handleBoat(socket, io);
-    handleRaceHistory(socket, io, dataHistory, record)
+    handleBoat(socket, io, speed);
+    handleRaceHistory(socket, io, dataHistory, record, speed)
   });
 }

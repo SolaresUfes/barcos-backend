@@ -1,11 +1,18 @@
 import { Socket } from "socket.io";
 import { convertData } from "../utils/dataProcessing";
 
-export function handleBoat(socket: Socket, io: any) : void {
+export function handleBoat(socket: Socket, io: any, speed: string[]) : void {
 
   socket.on("newinfo", (data: string) => {
     // console.log(data);
-    const newData = convertData(data);
+    let newData = convertData(data);
+    newData.velocidadeBarco = speed[0];
     io.emit("info", newData);
+  });
+
+  socket.on("speed", (data: string) => {
+    speed.pop();
+    speed.push(data);
+    // console.log(speed[0]);
   });
 };

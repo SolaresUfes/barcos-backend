@@ -9,6 +9,7 @@ export interface Data {
   tensaoSaidaMPPT: string;
   tensaoEntradaMPPT: string;
   correnteMPPT: string;
+  velocidadeBarco?: string;
   updateAt: string;
 }
 
