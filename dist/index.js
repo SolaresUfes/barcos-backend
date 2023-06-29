@@ -37,6 +37,7 @@ const socket_1 = require("./server/socket");
 const network_1 = require("./utils/network");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
+app.use(express_1.default.json());
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {

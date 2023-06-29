@@ -22,9 +22,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.configureRoutes = void 0;
 const path = __importStar(require("path"));
+const chatgpt_1 = require("../utils/chatgpt");
 function configureRoutes(app) {
     app.get('/', (req, res) => {
         res.status(200).send({ message: 'Servidor online' });
@@ -34,5 +44,25 @@ function configureRoutes(app) {
         const indexPath = path.join(__dirname, '..', 'views', 'index.html');
         res.sendFile(indexPath);
     });
+    app.post('/gpt', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Content-Type', 'text/event-stream;charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-transform');
+        res.setHeader('X-Accel-Buffering', 'no');
+        console.log('GPT request received');
+        const { prompt } = req.body;
+        if (!prompt)
+            return res.end();
+        try {
+            yield (0, chatgpt_1.gptResponse)(prompt, res);
+            console.log('GPT response sent');
+        }
+        catch (error) {
+            console.log(error);
+            res.write('Estou com dificuldades para responder, tente novamente mais tarde.');
+            res.write(`Status erro: ${error}`);
+            res.end();
+        }
+    }));
 }
 exports.configureRoutes = configureRoutes;
