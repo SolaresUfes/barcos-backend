@@ -12,6 +12,7 @@ function handleBoat(socket, io, speed) {
     socket.on("speed", (data) => {
         speed.pop();
         speed.push(data);
+        io.emit("speedInfo", data);
         // console.log(speed[0]);
     });
 }
