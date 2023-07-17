@@ -23,6 +23,10 @@ function convertData(str) {
         tensaoSaidaMPPT: array[7],
         tensaoEntradaMPPT: array[8],
         correnteMPPT: array[9],
+        //potenciaSaidaMPPT: array[10],
+        //potenciaEntradaMPPT: array[11],
+        //potenciaMotor: array[12],
+        //potenciaBateria[13],
         updateAt: getDataAtualBrasil().format('DD/MM/YYYY HH:mm:ss')
     };
 }
