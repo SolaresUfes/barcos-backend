@@ -7,13 +7,14 @@ function configureSockets(io) {
     let dataHistory = [];
     let record = [];
     let speed = ['0'];
+    let namePilot = ['default'];
     io.on('connection', (socket) => {
         console.log('new user: ', socket.id);
         socket.on('disconnect', () => {
             console.log('user disconnected: ', socket.id);
         });
-        (0, boat_handlers_1.handleBoat)(socket, io, speed);
-        (0, history_handlers_1.handleRaceHistory)(socket, io, dataHistory, record, speed);
+        (0, boat_handlers_1.handleBoat)(socket, io, speed, namePilot);
+        (0, history_handlers_1.handleRaceHistory)(socket, io, dataHistory, record, speed, namePilot);
     });
 }
 exports.configureSockets = configureSockets;

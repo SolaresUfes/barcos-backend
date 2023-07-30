@@ -3,14 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRaceHistory = void 0;
 const firebase_1 = require("../utils/firebase");
 const dataProcessing_1 = require("../utils/dataProcessing");
-function handleRaceHistory(socket, io, dataHistory, record, speed) {
+function handleRaceHistory(socket, io, dataHistory, record, speed, namePilot) {
     setTimeout(() => {
         socket.emit("recordStatus", record.length > 0);
     }, 3000);
     socket.on("newinfo", (data) => {
         if (record.length > 0) {
             const updateAt = (0, dataProcessing_1.getDataAtualBrasil)().format('DD/MM/YYYY HH:mm:ss');
-            const newData = data + "," + speed[0] + "," + updateAt;
+            const newData = data + "," + speed[0] + "," + updateAt + "," + namePilot[0];
             console.log(newData);
             dataHistory.push(newData);
         }
