@@ -7,7 +7,8 @@ export function handleRaceHistory(
   io: any,
   dataHistory: string[],
   record: boolean[],
-  speed: string[]
+  speed: string[],
+  namePilot: string[]
 ): void {
   setTimeout(() => {
     socket.emit("recordStatus", record.length > 0);
@@ -16,7 +17,7 @@ export function handleRaceHistory(
   socket.on("newinfo", (data: string) => {
     if (record.length > 0) {
       const updateAt = getDataAtualBrasil().format('DD/MM/YYYY HH:mm:ss')
-      const newData = data + "," + speed[0] + "," + updateAt;
+      const newData = data + "," + speed[0] + "," + namePilot[0] + "," + updateAt;
       console.log(newData);
       dataHistory.push(newData);
     }

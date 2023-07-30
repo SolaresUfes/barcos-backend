@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { convertData } from "../utils/dataProcessing";
 
-export function handleBoat(socket: Socket, io: any, speed: string[]) : void {
+export function handleBoat(socket: Socket, io: any, speed: string[], namePilot: string[]): void {
 
   socket.on("newinfo", (data: string) => {
     // console.log(data);
@@ -16,4 +16,12 @@ export function handleBoat(socket: Socket, io: any, speed: string[]) : void {
     io.emit("speedInfo", data);
     // console.log(speed[0]);
   });
+
+  socket.on("newName", (data: string) => {
+    namePilot.pop();
+    namePilot.push(data);
+    io.emit("nameInfo", data);
+    // console.log(speed[0]);
+  });
+
 };
