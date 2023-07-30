@@ -4,7 +4,7 @@ import { gptResponse } from '../utils/chatgpt';
 
 export function configureRoutes(app: Express): void {
   app.get('/', (req: Request, res: Response) => {
-    res.status(200).send({ message: 'Servidor online' });
+    res.status(200).send({ message: 'Servidor online TESTE RSRSRSRS' });
   });
 
   app.get('/info', (req: Request, res: Response) => {
