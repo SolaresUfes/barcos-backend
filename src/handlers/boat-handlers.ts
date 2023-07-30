@@ -21,7 +21,7 @@ export function handleBoat(socket: Socket, io: any, speed: string[], namePilot: 
     namePilot.pop();
     namePilot.push(data);
     io.emit("nameInfo", data);
-    // console.log(speed[0]);
+    console.log(namePilot[0]);
   });
 
 };
