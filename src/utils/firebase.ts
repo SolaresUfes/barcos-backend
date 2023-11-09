@@ -20,7 +20,10 @@ export async function saveFileToStorage(stringsArray: string[]) {
   const text = stringsArray.join("\n");
 
   // Create a reference to the file in Firebase Storage
-  const file = bucket.file(`logs/${getDataAtualBrasil().format('DD-MM-YYYY HH:mm:ss')}.txt`);
+  const nomeArquivo = `${getDataAtualBrasil().format(
+    "DD-MM-YYYY HH:mm:ss"
+  )}.txt`;
+  const file = bucket.file(`logs/${nomeArquivo}`);
 
   // Upload the file to Firebase Storage
   file.save(text, {
@@ -32,6 +35,30 @@ export async function saveFileToStorage(stringsArray: string[]) {
       console.error("Error uploading file:", error);
     } else {
       console.log("File uploaded successfully.");
+
+        const db = admin.firestore();
+
+        const filesCollection = db.collection("files");
+
+        const data = {
+          nomeArquivo: nomeArquivo,
+          nomeArquivoStorage: nomeArquivo,
+          tipo: "",
+        };
+
+        filesCollection
+          .add(data)
+          .then((res) => {
+            console.log(
+              `Arquivo ${nomeArquivo} salvo no banco de dados com sucesso`
+            );
+          })
+          .catch((err) => {
+            console.error(
+              `Erro ao salvar o arquivo ${nomeArquivo} no banco de dados`,
+              err
+            );
+          });
     }
   });
 }
