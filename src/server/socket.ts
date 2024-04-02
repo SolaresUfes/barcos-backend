@@ -17,5 +17,7 @@ export function configureSockets(io: Server): void {
 
     handleBoat(socket, io, speed, namePilot);
     handleRaceHistory(socket, io, dataHistory, record, speed, namePilot)
+
+    setInterval(() => socket.emit('my-event', 'Hello World!'), 1000)
   });
 }
