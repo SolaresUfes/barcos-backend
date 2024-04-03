@@ -24,6 +24,8 @@ configureSockets(io);
 
 const port = process.env.PORT || 4000;
 
+console.log(io.path(), port);
+
 server.listen(port, () => {
   const ipAddress = getLocalIpAddresses()
   console.log(`Servidor rodando em http://${ipAddress}:${port}`);
