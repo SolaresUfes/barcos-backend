@@ -16,7 +16,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: '*',
-  }
+  },
+  allowEIO3: true
 });
 
 configureRoutes(app);
