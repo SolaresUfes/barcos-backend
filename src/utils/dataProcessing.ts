@@ -7,19 +7,20 @@ export function getDataAtualBrasil(): moment.Moment {
 }
 
 export function convertData(str: string) : Data {
-  let array = str.split(",")
+  let array = str.split(",");
 
   return {
-      correnteMotor: array[0],
-      correnteBaterias: array[1],
-      temperatura: array[2],
-      umidade: array[3],
-      tensaoAlimentacaoPCB: array[4],
-      estadoStringSolar1: array[5],
-      estadoStringSolar2: array[6],
-      tensaoSaidaMPPT: array[7],
-      tensaoEntradaMPPT: array[8],
-      correnteMPPT: array[9],
+      versao: array[0],
+      correnteMotor: array[1],
+      correnteBaterias: array[2],
+      temperatura: array[3],
+      umidade: array[4],
+      tensaoAlimentacaoPCB: array[5],
+      estadoStringSolar1: array[6],
+      estadoStringSolar2: array[7],
+      tensaoSaidaMPPT: array[8],
+      tensaoEntradaMPPT: array[9],
+      correnteMPPT: array[10],
       updateAt: getDataAtualBrasil().format('DD/MM/YYYY HH:mm:ss')
     }  
 }

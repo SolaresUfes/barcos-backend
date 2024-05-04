@@ -1,4 +1,5 @@
 export interface Data {
+  versao: string;
   correnteMotor: string;
   correnteBaterias: string;
   temperatura: string;
