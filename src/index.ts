@@ -20,7 +20,7 @@ const io = new Server(server, {
   allowEIO3: true
 });
 
-configureRoutes(app);
+configureRoutes(app, io);
 configureSockets(io);
 
 const port = process.env.PORT || 4000;

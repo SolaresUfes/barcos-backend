@@ -2,6 +2,7 @@ import * as admin from 'firebase-admin';
 
 // Configuração do Firebase Admin SDK para acesso ao Storage
 import { getDataAtualBrasil } from './dataProcessing';
+import { Server } from 'socket.io';
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -61,4 +62,49 @@ export async function saveFileToStorage(stringsArray: string[]) {
           });
     }
   });
+}
+
+export async function saveFile(file: any, io: Server){
+  io.emit('fileUploaded', true);
+  const bucket = admin.storage().bucket();
+
+  // Upload file to Firebase Storage
+  const blob = bucket.file('OTA/esp32_Firmware.ino.bin');
+  const blobStream = blob.createWriteStream({
+    metadata: {
+      contentType: file.mimetype
+    }
+  });
+
+  blobStream.on('error', (error) => {
+    console.error('Error uploading file:', error);
+  });
+
+  blobStream.on('finish', () => {
+    console.log('File uploaded successfully.');
+    //emitir evento
+    io.emit('file-uploaded', 'OTA/esp32_Firmware.ino.bin');
+  });
+
+  blobStream.end(file.buffer);
+}
+
+export async function getFile(fileName: string){
+  const bucket = admin.storage().bucket();
+
+  const file = bucket.file(fileName);
+
+  const fileStream = file.createReadStream();
+
+  return fileStream;
+}
+
+export async function getFileMetadata(fileName: string){
+  const bucket = admin.storage().bucket();
+
+  const file = bucket.file(fileName);
+
+  const [metadata] = await file.getMetadata();
+
+  return metadata;
 }

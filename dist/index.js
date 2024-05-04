@@ -35,6 +35,8 @@ const socket_io_1 = require("socket.io");
 const express_2 = require("./server/express");
 const socket_1 = require("./server/socket");
 const network_1 = require("./utils/network");
+const firebase_1 = require("./utils/firebase");
+const multer_1 = __importDefault(require("multer"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -42,11 +44,34 @@ const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
         origin: '*',
-    }
+    },
+    allowEIO3: true
 });
 (0, express_2.configureRoutes)(app);
 (0, socket_1.configureSockets)(io);
 const port = process.env.PORT || 4000;
+console.log(io.path(), port);
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    },
+});
+const upload = (0, multer_1.default)({ storage });
+// Endpoint to receive file
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+    const uploadTask = (0, firebase_1.saveFile)(req.file);
+    uploadTask.then(() => {
+        res.status(200).send('File uploaded successfully.');
+    }).catch((error) => {
+        res.status(500).send('Error uploading file: ' + error.message);
+    });
+});
 server.listen(port, () => {
     const ipAddress = (0, network_1.getLocalIpAddresses)();
     console.log(`Servidor rodando em http://${ipAddress}:${port}`);

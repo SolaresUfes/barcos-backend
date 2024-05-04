@@ -1,8 +1,11 @@
 import { Express, Request, Response } from 'express';
 import * as path from 'path';
 import { gptResponse } from '../utils/chatgpt';
+import { getFile, getFileMetadata, saveFile } from '../utils/firebase';
+import multer from 'multer';
+import { Server } from 'socket.io';
 
-export function configureRoutes(app: Express): void {
+export function configureRoutes(app: Express, io: Server): void {
   app.get('/', (req: Request, res: Response) => {
     res.status(200).send({ message: 'Servidor online' });
   });
@@ -31,4 +34,30 @@ export function configureRoutes(app: Express): void {
       res.end();
     }
   });
+
+  const storage = multer.memoryStorage();
+  const upload = multer({ storage });
+  // Endpoint to receive file
+  app.post('/uploadOTA', upload.single('file'), async (req, res) => {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded.');
+    }
+
+    console.log(req.file);
+    
+    await saveFile(req.file, io)
+
+    res.status(200).send('File uploaded successfully.');
+  });
+
+  app.get('/downloadOTA', async (req, res) => {
+    const fileName = 'OTA/esp32_Firmware.ino.bin'
+
+    const metadata = await getFileMetadata(fileName);
+    const fileStream = await getFile(fileName)
+    res.setHeader('Content-Length', metadata.size);
+
+    // res.setHeader('Content-Length', fileStream.)
+    fileStream.pipe(res)
+  })
 }

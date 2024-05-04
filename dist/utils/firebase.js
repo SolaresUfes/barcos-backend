@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveFileToStorage = void 0;
+exports.saveFile = exports.saveFileToStorage = void 0;
 const admin = __importStar(require("firebase-admin"));
 // Configuração do Firebase Admin SDK para acesso ao Storage
 const dataProcessing_1 = require("./dataProcessing");
@@ -51,7 +51,8 @@ function saveFileToStorage(stringsArray) {
         // Convert the string array to a single string
         const text = stringsArray.join("\n");
         // Create a reference to the file in Firebase Storage
-        const file = bucket.file(`logs/${(0, dataProcessing_1.getDataAtualBrasil)().format('DD-MM-YYYY HH:mm:ss')}.txt`);
+        const nomeArquivo = `${(0, dataProcessing_1.getDataAtualBrasil)().format("DD-MM-YYYY HH:mm:ss")}.txt`;
+        const file = bucket.file(`logs/${nomeArquivo}`);
         // Upload the file to Firebase Storage
         file.save(text, {
             metadata: {
@@ -63,8 +64,34 @@ function saveFileToStorage(stringsArray) {
             }
             else {
                 console.log("File uploaded successfully.");
+                const db = admin.firestore();
+                const filesCollection = db.collection("files");
+                const data = {
+                    nomeArquivo: nomeArquivo,
+                    nomeArquivoStorage: nomeArquivo,
+                    tipo: "",
+                };
+                filesCollection
+                    .add(data)
+                    .then((res) => {
+                    console.log(`Arquivo ${nomeArquivo} salvo no banco de dados com sucesso`);
+                })
+                    .catch((err) => {
+                    console.error(`Erro ao salvar o arquivo ${nomeArquivo} no banco de dados`, err);
+                });
             }
         });
     });
 }
 exports.saveFileToStorage = saveFileToStorage;
+function saveFile(file) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const bucket = admin.storage().bucket();
+        // Upload file to Firebase Storage
+        const uploadTask = bucket.upload(file.path, {
+            destination: `OTA/${file.originalname}`
+        });
+        return uploadTask;
+    });
+}
+exports.saveFile = saveFile;
