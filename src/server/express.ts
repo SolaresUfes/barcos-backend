@@ -23,14 +23,14 @@ export function configureRoutes(app: Express, io: Server): void {
     res.setHeader('X-Accel-Buffering', 'no');
     console.log('GPT request received');
     const { prompt } = req.body;
-    if(!prompt) return res.end();
+    if (!prompt) return res.end();
     try {
       await gptResponse(prompt, res);
       console.log('GPT response sent');
     } catch (error) {
       console.log(error);
-      res.write('Estou com dificuldades para responder, tente novamente mais tarde.')
-      res.write(`Status erro: ${error}`)
+      res.write('Estou com dificuldades para responder, tente novamente mais tarde.');
+      res.write(`Status erro: ${error}`);
       res.end();
     }
   });
@@ -45,19 +45,35 @@ export function configureRoutes(app: Express, io: Server): void {
 
     console.log(req.file);
     
-    await saveFile(req.file, io)
+    await saveFile(req.file, io);
 
     res.status(200).send('File uploaded successfully.');
   });
 
   app.get('/downloadOTA', async (req, res) => {
-    const fileName = 'OTA/esp32_Firmware.ino.bin'
+    const fileName = 'OTA_esp32_Firmware.ino.bin';
 
-    const metadata = await getFileMetadata(fileName);
-    const fileStream = await getFile(fileName)
-    res.setHeader('Content-Length', metadata.size);
+    try {
+      const metadata = await getFileMetadata(fileName);
+      const fileStream = await getFile(fileName);
 
-    // res.setHeader('Content-Length', fileStream.)
-    fileStream.pipe(res)
-  })
+      // Verificar se metadata.size está definido
+      if (metadata.size !== undefined) {
+        res.setHeader('Content-Length', metadata.size);
+      } else {
+        console.error(`Tamanho do arquivo ${fileName} não disponível nos metadados`);
+        return res.status(500).send('Erro: Tamanho do arquivo não disponível');
+      }
+
+      // Configurar cabeçalhos adicionais (opcional)
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+      // Enviar o arquivo
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error);
+      res.status(500).send('Erro interno ao processar o download');
+    }
+  });
 }
